@@ -4,14 +4,17 @@ import HeaderApp from '../customs/HeaderApp'
 import { sizes, colors } from '../../constant';
 import KeyBoardDismiss from '../customs/KeyBoardDismiss';
 import LinearGradient from 'react-native-linear-gradient';
+import Title from '../customs/Title';
 
 export default function Index({ navigation }) {
 
    return (
       <View style={{ flex: 1 }}>
-         <HeaderApp navigation={navigation} />
+         <HeaderApp navigation={navigation} back={true} />
          <KeyBoardDismiss style={styles.container}>
-            <Text style={styles.title}>Login</Text>
+            {/* <Text style={styles.title}>Login</Text>
+             */}
+            <Title title={"Login"} />
             <View style={styles.viewForm}>
                <View style={styles.viewInput}>
                   <Text style={styles.titleInput}>Email</Text>
@@ -29,7 +32,7 @@ export default function Index({ navigation }) {
                </View>
             </View>
             <TouchableHighlight
-               onPress={() => alert("Login")}
+               onPress={() => navigation.navigate('Browse')}
                style={styles.viewTouch}
             >
                <LinearGradient

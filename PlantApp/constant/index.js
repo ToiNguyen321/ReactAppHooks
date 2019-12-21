@@ -1,4 +1,6 @@
+
 import {colors, sizes, fonts} from './themes';
 import { images, icons } from './images';
-
-export { colors, sizes, fonts, images, icons };
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window')
+export { colors, sizes, fonts, images, icons, width, height };
