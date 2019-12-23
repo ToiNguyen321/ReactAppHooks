@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, Dimensions, Animated, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, Text, Image, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, sizes, images } from '../../constant';
+import TermsOfService from './TermsOfService';
 
 const data = [
    { id: 1, image: images.illustration_1 },
@@ -9,9 +10,18 @@ const data = [
    { id: 3, image: images.illustration_3 },
 ]
 const { width, height } = Dimensions.get('window')
-export default function Index({ navigation : {navigate} }) {
-   const scrollX = new Animated.Value(0);
+export default function Index({ navigation }) {
+   const [modalVisible, setModalVisible] = React.useState(false)
 
+   const scrollX = new Animated.Value(0);
+   const navigateLogin = () => navigation.navigate('Login');
+   
+   const keyExtractor = (item) => `${item.id}`;
+   const renderItem = ({ item }) => <View style={styles.viewImage}>
+      <Image source={item.image} style={styles.image} />
+   </View>
+
+   const setModal = () => setModalVisible(!modalVisible)
    return (
       <View style={styles.container}>
          <View style={styles.viewTitle}>
@@ -26,13 +36,8 @@ export default function Index({ navigation : {navigate} }) {
                showsHorizontalScrollIndicator={false}
                pagingEnabled
                data={data}
-               keyExtractor={item => `${item.id}`}
-               renderItem={
-                  ({ item }) =>
-                     <View style={styles.viewImage}>
-                        <Image source={item.image} style={styles.image} />
-                     </View>
-               }
+               keyExtractor={keyExtractor}
+               renderItem={renderItem}
                onScroll={
                   Animated.event([{
                      nativeEvent: { contentOffset: { x: scrollX } }
@@ -56,8 +61,8 @@ export default function Index({ navigation : {navigate} }) {
             </View>
          </View>
          <View>
-            <TouchableHighlight
-               onPress={() => navigate('Login')}
+            <TouchableOpacity
+               onPress={navigateLogin}
                style={styles.viewTouch}
             >
                <LinearGradient
@@ -68,16 +73,21 @@ export default function Index({ navigation : {navigate} }) {
                >
                   <Text style={styles.textLogin}>Login</Text>
                </LinearGradient >
-            </TouchableHighlight>
-            <TouchableHighlight
-               onPress={() => navigate('Login')}
+            </TouchableOpacity>
+            <TouchableOpacity
+               onPress={navigateLogin}
                style={styles.viewTouch}
             >
                <View style={[styles.viewButtonLogin, styles.viewButtonSignUp,]}>
-                  <Text style={[styles.textLogin, styles.textSignUp,]}>Login</Text>
+                  <Text style={[styles.textLogin, styles.textSignUp,]}>SignIn</Text>
                </View>
-            </TouchableHighlight>
-            <Text style={[styles.textTerms]}>Terms of service</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+               onPress={setModal}
+            >
+               <Text style={[styles.textTerms]}>Terms of service</Text>
+            </TouchableOpacity>
+            <TermsOfService modalVisible={modalVisible} setModalVisible={setModal} />
          </View>
       </View>
    )
@@ -145,6 +155,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 7.5,
+      elevation: 3,
    },
    textLogin: {
       fontSize: sizes.base,

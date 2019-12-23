@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native';
-import { sizes } from '../../constant';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { sizes, images, colors } from '../../constant';
 
 export default function Title(props) {
    return (
@@ -8,9 +8,17 @@ export default function Title(props) {
          <Text style={styles.title}>
             {props.title}
          </Text>
-         <View>
-
-         </View>
+         {
+            props.setting && 
+            <TouchableOpacity
+               activeOpacity={1}
+               // onPress={() => props.navigation.openDrawer()}
+            >
+               <View style={styles.buttonAvatar}>
+                  <Image source={images.avatar} style={styles.avatar} />
+               </View>
+            </TouchableOpacity>
+         }
       </View>
    )
 }
@@ -18,11 +26,20 @@ const styles = StyleSheet.create({
    container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      paddingBottom: sizes.padding * 2.5,
    },
    title: {
       fontSize: sizes.h2,
       fontWeight: 'bold',
-      paddingBottom: sizes.padding * 3.5,
+      color: colors.black
    },
+   buttonAvatar: {
+      justifyContent: 'center',
+      alignItems: 'center',
+   },
+   avatar: {
+      width: 30,
+      height: 30,
+   }
 });

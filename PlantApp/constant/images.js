@@ -5,7 +5,7 @@ const images = {
    plants_1: require('../assets/images/plants_1.png'),
    plants_2: require('../assets/images/plants_2.png'),
    plants_3: require('../assets/images/plants_3.png'),
-   explore_1: require('../assets/images/explore_1.png'),
+   avatar: require('../assets/images/avatar.png'),
 
 
 }

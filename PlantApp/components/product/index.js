@@ -4,16 +4,16 @@ import { View, Text, StyleSheet, Image, SafeAreaView } from 'react-native'
 import { images, width, height, sizes, colors } from '../../constant';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const listImages = [1,2,3,4,5,6,7,8,9];
+const listImages = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const renderItem = (item) => {
-   return(
+   return (
       <Image key={`${item}`} source={images.plants_2} style={styles.imageGallery} />
    )
 }
-export default function index() {
+export default function index({ navigation }) {
    return (
       <View style={styles.container}>
-         <HeaderApp back={true} menu={true} />
+         <HeaderApp back={true} menu={true} navigation={navigation} />
          <ScrollView style={styles.container}>
             <View style={styles.viewImage}>
                <Image source={images.plants_1} style={styles.imageBig} />
@@ -31,10 +31,10 @@ export default function index() {
                <Text style={styles.titleProduct}>Gallery</Text>
                <View style={styles.gallery}>
                   {
-                     listImages.splice(0,2).map(item => renderItem(item))
+                     listImages.slice(0, 2).map(renderItem)
                   }
                   <View style={styles.imageGalleryPlus}>
-                     <Text style={styles.textGalleryPlus}>+{listImages.length}</Text>
+                     <Text style={styles.textGalleryPlus}>+{listImages.slice(2).length}</Text>
                   </View>
                </View>
             </SafeAreaView>

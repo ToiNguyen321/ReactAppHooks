@@ -7,13 +7,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import Title from '../customs/Title';
 
 export default function Index({ navigation }) {
-
+   const navigate = () => navigation.navigate('Browse');
    return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.fill}>
          <HeaderApp navigation={navigation} back={true} />
          <KeyBoardDismiss style={styles.container}>
-            {/* <Text style={styles.title}>Login</Text>
-             */}
             <Title title={"Login"} />
             <View style={styles.viewForm}>
                <View style={styles.viewInput}>
@@ -32,7 +30,7 @@ export default function Index({ navigation }) {
                </View>
             </View>
             <TouchableHighlight
-               onPress={() => navigation.navigate('Browse')}
+               onPress={navigate}
                style={styles.viewTouch}
             >
                <LinearGradient
@@ -49,6 +47,9 @@ export default function Index({ navigation }) {
    )
 }
 const styles = StyleSheet.create({
+   fill: {
+      flex: 1,
+   },
    container: {
       flex: 1,
       paddingHorizontal: sizes.padding * 2.5,
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 7.5,
+      elevation: 3,
    },
    textLogin: {
       fontSize: sizes.base,

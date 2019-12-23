@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Image, Animated, Platform } from 'react-native';
 import Title from '../customs/Title';
 import HeaderApp from '../customs/HeaderApp';
 import { sizes, colors, icons } from '../../constant';
+import { categories } from '../../constant/mocks';
 
-const categories = [1, 2, 3, 4, 5, 6];
 const { width, height } = Dimensions.get('window');
-
+const PADDING_TOP = 50;
 const renderTab = (item, index, active, setTabActive) => {
    return (
       <View style={[styles.tab, active && styles.tabActive]} key={index.toString()}>
@@ -22,43 +22,55 @@ const renderTab = (item, index, active, setTabActive) => {
 const category = (item, index, navigation) => {
    const marginRight = index % 2 === 0 ? sizes.padding : sizes.padding * 2.5;
    const marginLeft = index % 2 === 0 ? sizes.padding * 2.5 : 0;
+   const navigate = () => navigation.navigate('Explore');
    return (
       <TouchableOpacity
          activeOpacity={0.8}
          style={{ paddingRight: marginRight, paddingLeft: marginLeft, backgroundColor: colors.white }}
          key={`${index}`}
-         onPress={() => navigation.navigate('Explore')}
+         onPress={navigate}
       >
          <View style={[styles.card]}>
             <View style={styles.viewImageCategory} >
-               <Image source={icons.plants} style={styles.imageCategory} />
+               <Image source={item.image} style={styles.imageCategory} />
             </View>
-            <Text style={styles.titleCategory}>Plants</Text>
-            <Text style={styles.numberCategory}>300 products</Text>
+            <Text style={styles.titleCategory}>{item.name}</Text>
+            <Text style={styles.numberCategory}>{item.count} products</Text>
          </View>
       </TouchableOpacity>
    )
 }
 export default function index(props) {
    const [tabActive, setTabActive] = React.useState(0)
+   const scrollY = new Animated.Value(0);
    const Tabs = ['Products', 'Inspirations', 'Shop'];
+   const translateY = scrollY.interpolate({
+      inputRange: [0, PADDING_TOP + 0],
+      outputRange: [0, -PADDING_TOP - 0],
+      extrapolate: 'clamp'
+   })
    return (
       <View style={styles.container}>
          <HeaderApp back={true} navigation={props.navigation} />
          <View style={styles.content}>
-            <Title title={"Browse"} styles={{ paddingHorizontal: sizes.padding * 2.5 }} />
-            <View style={styles.tabs}>
+            <Title title={"Browse"} navigation={props.navigation} setting styles={{ paddingHorizontal: sizes.padding * 2.5 }} />
+            <Animated.View style={[styles.tabs, { transform: [{ translateY }] }]}>
                {Tabs.map((item, index) => renderTab(item, index, tabActive === index, () => setTabActive(index)))}
-            </View>
-            <ScrollView
+            </Animated.View>
+            <Animated.ScrollView
                showsVerticalScrollIndicator={false}
+               scrollEventThrottle={16}
+               onScroll={Animated.event(
+                  [{nativeEvent: { contentOffset: { y: scrollY } }}],
+                  { useNativeDriver: true }
+               )}
             >
-               <View style={styles.cards}>
+               <Animated.View style={[styles.cards, { paddingTop: PADDING_TOP }]}>
                   {
                      categories.map((item, index) => category(item, index, props.navigation))
                   }
-               </View>
-            </ScrollView>
+               </Animated.View>
+            </Animated.ScrollView>
          </View>
       </View>
    )
@@ -73,12 +85,18 @@ const styles = StyleSheet.create({
       // paddingHorizontal: sizes.padding * 2.5
    },
    tabs: {
+      position: 'absolute',
+      top: PADDING_TOP,
+      left: 0,
+      right: 0,
+      height: 50,
       paddingHorizontal: sizes.padding * 4.5,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       backgroundColor: colors.white,
       marginBottom: sizes.padding * 1.5,
+      zIndex: 2,
    },
    tab: {
       paddingVertical: sizes.padding * 0.5,
@@ -107,7 +125,9 @@ const styles = StyleSheet.create({
       maxHeight: (width - (sizes.padding * 2.5) * 2 - (sizes.padding * 1.5)) / 2,
       alignItems: 'center',
       shadowColor: colors.accent,
-      elevation: 6,
+      backgroundColor: 'white',
+      elevation: 8,
+      // backgroundColor: 'blue',
       borderRadius: sizes.padding,
       marginBottom: sizes.padding * 1,
       padding: sizes.padding * 2.5,
